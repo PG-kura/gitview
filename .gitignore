@@ -1,0 +1,6 @@
+.*
+*.so
+*_wrap.cxx
+*.o
+*.i
+!.gitignore
