@@ -3,4 +3,5 @@
 *_wrap.cxx
 *.o
 *.i
+Gemfile.lock
 !.gitignore
