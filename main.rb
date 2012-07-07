@@ -8,7 +8,11 @@ require 'sass'
 
 require 'git'
 
-configure do
+configure :development do
+  set :port, 3000
+end
+
+configure :production do
   set :port, 80
 end
 
