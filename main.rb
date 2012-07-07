@@ -30,7 +30,7 @@ end
 
 get '/' do
   @lines = []
-  @lines = Git::prevlog.split("\n")
+  @lines = Git::cmd_prevlog.split("\n")
   haml :index
 end
 
