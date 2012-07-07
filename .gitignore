@@ -3,5 +3,7 @@
 *_wrap.cxx
 *.o
 *.i
+run.sh
 Gemfile.lock
 !.gitignore
+
