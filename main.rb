@@ -1,7 +1,6 @@
 $:.unshift File.join(File.dirname(__FILE__), '.')
 require 'rubygems'
-# require 'example'
-
+require 'enumerator'
 require 'sinatra'
 require 'haml'
 require 'sass'
@@ -14,6 +13,10 @@ end
 
 configure :production do
   set :port, 80
+end
+
+def is_pjax?()
+  !(params[:_pjax].nil? or params[:_pjax] == "")
 end
 
 get '/styles.css' do
@@ -32,29 +35,47 @@ get '/pjax.js' do
   File.read('public/pjax.jx')
 end
 
+not_found do
+  if is_pjax?
+    haml :not_found
+  else
+    @partial = :not_found
+    haml :default_layout
+  end
+end
+
 get '/' do
-  @lines = []
-  @lines = Git::cmd_prevlog.split("\n")
-  haml :index
+  @commits = []
+  Git::cmd_log_10.split("\n").each_slice(6) do |lines|
+    @commits << Git::parse_commit(lines)
+  end
+ 
+  if is_pjax?
+    haml :log_10
+  else
+    @partial = :log_10
+    haml :default_layout
+  end
 end
 
 get '/1' do
-  if params[:_pjax].nil? or params[:_pjax] == ""
+  if is_pjax?
+    haml :first
+  else
     @partial = :first
     haml :default_layout
-  else
-    haml :first
   end
 end
 
 
 
+
+# require 'example'
 #get '/' do
 #  @v = 1
 #  haml :index
 #  e = Example::Example.new
 #  e.toUpper('aaa bbb ccc')
 #end
-
 
 

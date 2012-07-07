@@ -1,23 +1,23 @@
 $header_footer_color: black
+$header_height: 40px
 $footer_height: 40px
 
 body
   margin: 0px
 
 .header
-  height: 40px
+  height: $header_height
   width: 100%
   background-color: $header_footer_color
 
 .body
   margin: 8px
-
-.common-navigation
   position: absolute
+  top: $header_height
   bottom: $footer_height
-  height: 40px
-  width: 100%
-  margin-left: -20px
+  left: 0
+  right: 0
+  overflow: scroll
 
 .footer
   position: absolute

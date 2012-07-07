@@ -10,4 +10,12 @@ function go_next()
   }) 
 }
 
+function go(to)
+{
+  $.pjax({
+    url: to,
+    container: '.main-content',
+    success: function(data) {}
+  })
+}
 
