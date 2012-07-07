@@ -6,6 +6,8 @@ require 'sinatra'
 require 'haml'
 require 'sass'
 
+require 'git'
+
 configure do
   set :port, 80
 end
@@ -27,6 +29,8 @@ get '/pjax.js' do
 end
 
 get '/' do
+  @lines = []
+  @lines = Git::prevlog.split("\n")
   haml :index
 end
 

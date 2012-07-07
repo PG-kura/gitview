@@ -8,7 +8,9 @@
     .header
     .body
       .main-content
-        %p "Hello!" 
+        - @lines.each do |line|
+          %p
+            = line
       .common-navigation(align='right')
         %form
           %input(type='button' value='次へ' onclick='go_next()') 
