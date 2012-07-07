@@ -7,7 +7,7 @@ require 'haml'
 require 'sass'
 
 configure do
-  set :port, 8080
+  set :port, 80
 end
 
 get '/styles.css' do
