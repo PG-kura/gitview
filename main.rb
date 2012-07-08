@@ -19,6 +19,15 @@ def is_pjax?()
   !(params[:_pjax].nil? or params[:_pjax] == "")
 end
 
+def pjax_dispatch_render(partial)
+  if is_pjax?
+    haml partial
+  else
+    @partial = partial
+    haml :default_layout
+  end
+end
+
 get '/styles.css' do
   sass :styles
 end
@@ -36,35 +45,14 @@ get '/pjax.js' do
 end
 
 not_found do
-  if is_pjax?
-    haml :not_found
-  else
-    @partial = :not_found
-    haml :default_layout
-  end
+  pjax_dispatch_render(:not_found)
 end
 
 get '/' do
-  @commits = []
-  Git::cmd_log_10.split("\n").each_slice(6) do |lines|
-    @commits << Git::parse_commit(lines)
+  @commits = Git::cmd_recent_hash_10.map do |hash|
+    Git::cmd_show_raw(hash).parse
   end
- 
-  if is_pjax?
-    haml :log_10
-  else
-    @partial = :log_10
-    haml :default_layout
-  end
-end
-
-get '/1' do
-  if is_pjax?
-    haml :first
-  else
-    @partial = :first
-    haml :default_layout
-  end
+  pjax_dispatch_render(:commit_index)
 end
 
 
@@ -72,8 +60,6 @@ end
 
 # require 'example'
 #get '/' do
-#  @v = 1
-#  haml :index
 #  e = Example::Example.new
 #  e.toUpper('aaa bbb ccc')
 #end

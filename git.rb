@@ -1,34 +1,64 @@
 
 module Git
 
-def self.cmd_prevlog
-  `git log --pretty=format:\"%h - %an, %ar : %s\"`
+def self.cmd_recent_hash_10
+  `git log --pretty=format:%H`.split("\n")
 end
 
-def self.cmd_log_10
-  `git log -10`
+def self.cmd_show_raw(hash)
+  lines = `git show -s --pretty=raw #{hash}`.split("\n")
+  def lines.parse
+    commit = {}
+    index = 0
+    if self[index] =~ /commit ([\w]{40})/
+      commit[:hash] = $1
+      index = index + 1
+    end
+    if self[index] =~ /tree ([\w]{40})/
+      commit[:tree] = $1
+      index = index + 1
+    end
+    if self[index] =~ /parent ([\w]{40})/
+      commit[:parent] = $1
+      index = index + 1
+    end
+    if self[index] =~ /author (.*) <(.*)> ([\d]{10}) ([+,-])([\d]{2})([\d]{2})/
+      commit[:author] = {
+        :name => $1,
+        :email => $2,
+        :date => $3,
+        :timezone_diff => {
+          :is_plus => ($4 == '+'),
+          :hour => $5.to_i,
+          :min => $6.to_i
+        }
+      }
+      index = index + 1
+    end
+    if self[index] =~ /committer (.*) <(.*)> ([\d]{10}) ([+,-])([\d]{2})([\d]{2})/
+      commit[:author] = {
+        :name => $1,
+        :email => $2,
+        :date => $3,
+        :timezone_diff => {
+          :is_plus => ($4 == '+'),
+          :hour => $5.to_i,
+          :min => $6.to_i
+        }
+      }
+      index = index + 1
+    end
+    
+    index = index + 1
+    commit[:message] = []
+    while index < self.size
+      commit[:message] << self[index][4..self[index].size]
+      index = index + 1
+    end
+    commit
+  end
+  lines
 end
-
-def self.parse_commit(lines)
-  commit = {}
-
-  if lines[0] =~ /commit (.*)/
-    commit[:hash] = $1.strip
-  end
-
-  if lines[1] =~ /Author:([\s]+)(.*) <(.*)>/
-    commit[:author] = $2.strip
-    commit[:email] = $3.strip
-  end
-
-  if lines[2] =~ /Date:([\s]+)(.*)/
-    commit[:date] = $2.strip
-  end
-
-  commit[:message] = lines[4].strip
-
-  commit
-end 
 
 end
 
