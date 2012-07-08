@@ -6,7 +6,8 @@ def self.set_repository(path)
 end
 
 def self.exec_command(cmd)
-  `cd #{@@repository}; #{cmd}`.split("\n")
+  repository = FileTest::directory?(@@repository) ? @@repository : './'
+  `cd #{repository}; #{cmd}`.split("\n")
 end
 
 def self.cmd_recent_hash_10
