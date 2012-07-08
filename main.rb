@@ -7,6 +7,10 @@ require 'sass'
 
 require 'git'
 
+configure do 
+  Git::set_repository(ARGV[0])
+end
+
 configure :development do
   set :port, 3000
 end

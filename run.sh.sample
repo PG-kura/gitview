@@ -1,5 +1,5 @@
 
 bundle install
-export RACK_ENV=production
-ruby main.rb
+export RACK_ENV=production # or development
+ruby main.rb ./ # repository path
 
