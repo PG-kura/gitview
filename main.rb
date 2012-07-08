@@ -52,6 +52,10 @@ get '/' do
   @commits = Git::cmd_recent_hash_10.map do |hash|
     Git::cmd_show_raw(hash).parse
   end
+  d = @commits[0][:author][:date]
+  @commits.each do |commit|
+    commit[:date_s] = Time.at(commit[:author][:date].to_i).strftime('%Y/%m/%d %H:%M:%d')
+  end
   pjax_dispatch_render(:commit_index)
 end
 

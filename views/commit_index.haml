@@ -1,8 +1,7 @@
 %div{:style => 'margin-left: 20px;'}
   - @commits.each do |c|
-    - puts "### commit is #{c}"
     %p{:style => 'font-size: 12px;'}
-      = "#{c[:author][:date]} #{c[:hash]}"
+      = "#{c[:date_s]} #{c[:hash]}"
       %br
       = "　#{c[:author][:name]} &lt;#{c[:author][:email]}&gt;"
       %br
