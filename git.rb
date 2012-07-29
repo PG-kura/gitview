@@ -69,5 +69,17 @@ def self.cmd_show_raw(hash)
   lines
 end
 
+def self.cmd_fetch()
+  exec_command('git fetch')
+end
+
+def self.cmd_branch_r()
+  exec_command('git branch -r')
+end
+
+def self.cmd_branch()
+  exec_command('git branch')
+end
+
 end
 

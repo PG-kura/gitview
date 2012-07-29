@@ -1,6 +1,6 @@
 %div{:style => 'margin-left: 20px;'}
-  - @commits.each do |c|
-    %p{:style => 'font-size: 12px;'}
+  - commits.each do |c|
+    %p.commit_preview{:style => 'font-size: 12px;'}
       = "#{c[:date_s]} #{c[:hash]}"
       %br
       = "　#{c[:author][:name]} &lt;#{c[:author][:email]}&gt;"

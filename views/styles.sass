@@ -1,29 +1,45 @@
-$header_footer_color: black
-$header_height: 40px
-$footer_height: 40px
+
+$log_pane_width: 30%
+$remote_pane_default_height: 50%
+$fileview_pane_default_height: 50%
+
 
 body
-  margin: 0px
+  margin: 0
+  padding: 0
+  height: 100%
 
-.header
-  height: $header_height
-  width: 100%
-  background-color: $header_footer_color
+.commit_preview.selected
+  background-color: lightblue
 
-.body
-  margin: 8px
+#log_pane
+  height: 100%
+  width: $log_pane_width
+
+#remote_pane
   position: absolute
-  top: $header_height
-  bottom: $footer_height
+  top: 0
   left: 0
-  right: 0
-  overflow: scroll
-
-.footer
-  position: absolute
-  bottom: 0px
-  height: $footer_height
+  height: $remote_pane_default_height
   width: 100%
-  background-color: $header_footer_color
 
+#local_pane
+  position: absolute
+  top: $remote_pane_default_height
+  left: 0
+  height: 100% - $remote_pane_default_height
+  width: 100%
 
+#fileview_pane
+  position: absolute
+  left: $log_pane_width
+  right: 0
+  top: 0
+  height: $fileview_pane_default_height
+
+#diff_pane
+  position: absolute
+  left: $log_pane_width
+  right: 0
+  top: $fileview_pane_default_height
+  height: 100% - $fileview_pane_default_height

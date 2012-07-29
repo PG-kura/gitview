@@ -1,20 +1,8 @@
-
-
-function go_next()
-{
-  $.pjax({
-    url: '/1',
-    container: '.main-content',
-    success: function(data) {
-    }
-  }) 
-}
-
-function go(to)
+function go(to, pjax_container)
 {
   $.pjax({
     url: to,
-    container: '.main-content',
+    container: '#' + pjax_container,
     success: function(data) {}
   })
 }
