@@ -1,19 +1,43 @@
 
+$body_height: 98%
 $log_pane_width: 30%
 $remote_pane_default_height: 50%
 $fileview_pane_default_height: 50%
 
 
-body
-  margin: 0
-  padding: 0
-  height: 100%
-
 .commit_preview.selected
   background-color: lightblue
 
+body
+  height: $body_height
+
+.inner-pane-upper
+  position: absolute
+  top: 5px
+  left: 5px
+  right: 5px
+  bottom: 3px
+  border: 1px solid #DDD
+  overflow: auto
+
+.inner-pane-lower
+  position: absolute
+  top: 3px
+  left: 5px
+  right: 5px
+  bottom: 5px
+  border: 1px solid #DDD
+  overflow: auto
+
+.tabs-below .nav.nav-tabs
+  margin-bottom: 0
+
+.nav-tabs li a
+  padding-bottom: 3px
+  padding-top: 3px
+
 #log_pane
-  height: 100%
+  height: $body_height
   width: $log_pane_width
 
 #remote_pane
@@ -21,14 +45,15 @@ body
   top: 0
   left: 0
   height: $remote_pane_default_height
-  width: 100%
+  width: 30%
 
 #local_pane
   position: absolute
   top: $remote_pane_default_height
   left: 0
   height: 100% - $remote_pane_default_height
-  width: 100%
+  width: 30%
+  overflow: auto
 
 #fileview_pane
   position: absolute
@@ -36,6 +61,7 @@ body
   right: 0
   top: 0
   height: $fileview_pane_default_height
+  overflow: auto
 
 #diff_pane
   position: absolute
@@ -43,3 +69,5 @@ body
   right: 0
   top: $fileview_pane_default_height
   height: 100% - $fileview_pane_default_height
+  overflow: auto
+

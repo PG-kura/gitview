@@ -40,6 +40,10 @@ def pjax_dispatch_render(partial)
   end
 end
 
+get '/bootstrap.css' do
+  File.read('views/bootstrap.css')
+end
+
 get '/styles.css' do
   sass :styles
 end
@@ -50,6 +54,10 @@ end
 
 get '/jquery.pjax.js' do
   File.read('public/jquery.pjax.js')
+end
+
+get '/bootstrap.js' do
+  Fle.read('public/bootstrap.js')
 end
 
 get '/pjax.js' do
@@ -185,17 +193,15 @@ helpers do
 end
 
 
-
-
-def render_log_pane(contents)
-  haml :log_pane, :locals => contents
+def render_remote_pane(param)
+  haml :remote_pane
 end
 
 
 def default_mapping
   layout_with :default_layout, {
-    :log_pane => (layout_with method(:render_log_pane), {
-      :remote_pane  => :remote_pane,
+    :log_pane => (layout_with :log_pane, {
+      :remote_pane  => method(:render_remote_pane),
       :local_pane   => :local_pane
     }),
     :fileview_pane  => :fileview_pane,
@@ -203,7 +209,7 @@ def default_mapping
   }
 end
 
-def second_mapping
+def combined_mapping
   layout_with :default_layout, {
     :log_pane       => :combined_log_pane,
     :fileview_pane  => :fileview_pane,
@@ -215,12 +221,40 @@ get '/show2.html' do
   second_mapping.render(self)
 end
 
-get '/' do
-  @r_branches = Git::cmd_branch_r()
-  @l_branches = Git::cmd_branch()
+class RequestParam
+  def initialize(params)
+    @remote_branch = params['rb'] || 'master'
+    @local_branch = params['lb'] || 'master'
+  end
 
-  
-  default_mapping.render(self)
+  def modified_url(hash)
+    source = {}
+    source[:rb] = hash.delete(:remote_branch) || @remote_branch
+    source[:lb] = hash.delete(:local_branch) || @local_branch
+    s_param = source.map {|k, v| "#{k}=#{v}"}.join('&')
+    URI.encode("/?#{s_param}")
+  end
+
+  attr_reader :remote_branch, :local_branch
+end
+
+get '/' do
+  @request = RequestParam.new(params)
+  @r_branches = Git::cmd_branch_r().parse
+  @l_branches = Git::cmd_branch().parse
+
+  origin_head = nil
+  if found = @r_branches['origin'].find(&:is_head?)
+    origin_head = found.name
+  else
+    origin_head = @r_branches['origin'].first.name
+  end
+
+  #if same_branch = @l_branches.find {|b| b.name == origin_head }
+  #  combined_mapping.render(self)
+  #else
+    default_mapping.render(self)
+  #end
 
   #Git::cmd_fetch
   #@commits = Git::cmd_recent_hash_10.map do |hash|

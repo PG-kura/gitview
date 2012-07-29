@@ -1,2 +1,9 @@
-%p
-  = 'this is remote_pane'
+.inner-pane-upper
+  .tabbable
+    %ul.nav.nav-tabs
+      - @r_branches['origin'].each_with_index do |b, index|
+        %li{ b.name == @request.remote_branch ? {:class => :active } : {} }
+          %a{:href => "#tab#{index}", 'data-toggle' => 'tab'}
+            = b.name
+  %p
+    = 'this is remote_pane'
